@@ -25,12 +25,12 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-      <fileTypeFactory implementation="simpleLan.SimpleFileTypeFactory" />
-      <lang.parserDefinition language="Simple" implementationClass="simpleLan.SimpleParserDefinition"/>
-      <lang.syntaxHighlighterFactory language="Simple" implementationClass="simpleLan.SimpleSyntaxHighlighterFactory"/>
-     <annotator language="JAVA" implementationClass="simpleLan.SimpleAnnotator"/>
-      <psi.referenceContributor implementation="simpleLan.SimpleReferenceContributor"/>
-      <completion.contributor language="Simple" implementationClass="simpleLan.SimpleCompletionContributor"/>
+      <fileTypeFactory implementation="com.intellij.xtext.samples.simple.SimpleFileTypeFactory" />
+      <lang.parserDefinition language="Simple" implementationClass="com.intellij.xtext.samples.simple.SimpleParserDefinition"/>
+      <lang.syntaxHighlighterFactory language="Simple" implementationClass="com.intellij.xtext.samples.simple.SimpleSyntaxHighlighterFactory"/>
+     <annotator language="JAVA" implementationClass="com.intellij.xtext.samples.simple.SimpleAnnotator"/>
+      <psi.referenceContributor implementation="com.intellij.xtext.samples.simple.SimpleReferenceContributor"/>
+      <completion.contributor language="Simple" implementationClass="com.intellij.xtext.samples.simple.SimpleCompletionContributor"/>
 
   </extensions>
 
