@@ -32,7 +32,7 @@ simpleFile ::= Type*
 
 private Type ::= (DataType | Entity | COMMENT)
 
-DataType ::= datatype  Entity {
+DataType ::= datatype  ID {
 
 
 }
@@ -47,4 +47,4 @@ Entity ::= ent  ID  "{"
 
 
     }
-Feature ::= ID ":" Type
+Feature ::= ID ":" DataType
