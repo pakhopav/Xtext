@@ -12,14 +12,14 @@ import com.intellij.xtext.samples.simple.psi.impl.SimplePsiCompositeElementImpl;
 import com.intellij.xtext.samples.simple.psi.*;
 import com.intellij.xtext.samples.simple.psi.impl.SimplePsiImplUtil;
 
-public class SimpleFeatureImpl extends SimplePsiCompositeElementImpl implements SimpleFeature {
+public class SimpleReferenceToEntityImpl extends SimplePsiCompositeElementImpl implements SimpleReferenceToEntity {
 
-  public SimpleFeatureImpl(@NotNull ASTNode node) {
+  public SimpleReferenceToEntityImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SimpleVisitor visitor) {
-    visitor.visitFeature(this);
+    visitor.visitReferenceToEntity(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -29,20 +29,8 @@ public class SimpleFeatureImpl extends SimplePsiCompositeElementImpl implements 
 
   @Override
   @NotNull
-  public SimpleReferenceToDatatype getReferenceToDatatype() {
-    return findNotNullChildByClass(SimpleReferenceToDatatype.class);
-  }
-
-  @Override
-  @NotNull
   public PsiElement getId() {
     return findNotNullChildByType(ID);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getSep() {
-    return findNotNullChildByType(SEP);
   }
 
 }

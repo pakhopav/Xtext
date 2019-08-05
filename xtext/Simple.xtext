@@ -13,9 +13,9 @@ DataType:
     'datatype' ID;
 
 Entity:
-    'entity' ID  '{'
+    'entity' name=ID ('extends' superType=[Entity])? '{'
         (features+=Feature)*
     '}';
 
 Feature:
-     ID ':' DataType;
+    name=ID ':' type=[DataType];

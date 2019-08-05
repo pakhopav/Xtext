@@ -10,13 +10,19 @@ public interface SimpleEntity extends SimpleNamedElement {
   @NotNull
   List<SimpleFeature> getFeatureList();
 
+  @Nullable
+  SimpleReferenceToEntity getReferenceToEntity();
+
   @NotNull
   PsiElement getId();
 
   @NotNull
   PsiElement getEnt();
 
-  String SimpleEntityGetID();
+  @Nullable
+  PsiElement getExtends();
+
+  String getIdSimpleEntity();
 
   String getName();
 

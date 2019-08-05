@@ -38,27 +38,19 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // datatype  ID {
-  // }
+  // datatype  ID
   public static boolean DataType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "DataType")) return false;
     if (!nextTokenIs(b, DATATYPE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokens(b, 0, DATATYPE, ID);
-    r = r && DataType_2(b, l + 1);
     exit_section_(b, m, DATA_TYPE, r);
     return r;
   }
 
-  // {
-  // }
-  private static boolean DataType_2(PsiBuilder b, int l) {
-    return true;
-  }
-
   /* ********************************************************** */
-  // ent  ID  "{"
+  // ent  ID (extends REFERENCE_TO_ENTITY)? "{"
   //     Feature*
   //     "}"
   public static boolean Entity(PsiBuilder b, int l) {
@@ -67,35 +59,77 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     boolean r;
     Marker m = enter_section_(b);
     r = consumeTokens(b, 0, ENT, ID);
+    r = r && Entity_2(b, l + 1);
     r = r && consumeToken(b, "{");
-    r = r && Entity_3(b, l + 1);
+    r = r && Entity_4(b, l + 1);
     r = r && consumeToken(b, "}");
     exit_section_(b, m, ENTITY, r);
     return r;
   }
 
+  // (extends REFERENCE_TO_ENTITY)?
+  private static boolean Entity_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Entity_2")) return false;
+    Entity_2_0(b, l + 1);
+    return true;
+  }
+
+  // extends REFERENCE_TO_ENTITY
+  private static boolean Entity_2_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Entity_2_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, EXTENDS);
+    r = r && REFERENCE_TO_ENTITY(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
   // Feature*
-  private static boolean Entity_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Entity_3")) return false;
+  private static boolean Entity_4(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Entity_4")) return false;
     while (true) {
       int c = current_position_(b);
       if (!Feature(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "Entity_3", c)) break;
+      if (!empty_element_parsed_guard_(b, "Entity_4", c)) break;
     }
     return true;
   }
 
   /* ********************************************************** */
-  // ID ":" DataType
+  // ID SEP REFERENCE_TO_DATATYPE
   public static boolean Feature(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Feature")) return false;
     if (!nextTokenIs(b, ID)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, ID);
-    r = r && consumeToken(b, ":");
-    r = r && DataType(b, l + 1);
+    r = consumeTokens(b, 0, ID, SEP);
+    r = r && REFERENCE_TO_DATATYPE(b, l + 1);
     exit_section_(b, m, FEATURE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // ID
+  public static boolean REFERENCE_TO_DATATYPE(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "REFERENCE_TO_DATATYPE")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ID);
+    exit_section_(b, m, REFERENCE_TO_DATATYPE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // ID
+  public static boolean REFERENCE_TO_ENTITY(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "REFERENCE_TO_ENTITY")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, ID);
+    exit_section_(b, m, REFERENCE_TO_ENTITY, r);
     return r;
   }
 

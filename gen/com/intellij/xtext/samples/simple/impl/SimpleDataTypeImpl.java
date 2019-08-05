@@ -8,11 +8,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.intellij.xtext.samples.simple.psi.SimpleTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl;
 import com.intellij.xtext.samples.simple.psi.*;
 import com.intellij.xtext.samples.simple.psi.impl.SimplePsiImplUtil;
 
-public class SimpleDataTypeImpl extends ASTWrapperPsiElement implements SimpleDataType {
+public class SimpleDataTypeImpl extends SimpleNamedElementImpl implements SimpleDataType {
 
   public SimpleDataTypeImpl(@NotNull ASTNode node) {
     super(node);
@@ -37,6 +37,26 @@ public class SimpleDataTypeImpl extends ASTWrapperPsiElement implements SimpleDa
   @NotNull
   public PsiElement getDatatype() {
     return findNotNullChildByType(DATATYPE);
+  }
+
+  @Override
+  public String getIdSimpleDatatype() {
+    return SimplePsiImplUtil.getIdSimpleDatatype(this);
+  }
+
+  @Override
+  public String getName() {
+    return SimplePsiImplUtil.getName(this);
+  }
+
+  @Override
+  public PsiElement setName(String newName) {
+    return SimplePsiImplUtil.setName(this, newName);
+  }
+
+  @Override
+  public PsiElement getNameIdentifier() {
+    return SimplePsiImplUtil.getNameIdentifier(this);
   }
 
 }

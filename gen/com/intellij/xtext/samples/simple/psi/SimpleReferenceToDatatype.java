@@ -5,20 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SimpleDataType extends SimpleNamedElement {
+public interface SimpleReferenceToDatatype extends PsiElement {
 
   @NotNull
   PsiElement getId();
-
-  @NotNull
-  PsiElement getDatatype();
-
-  String getIdSimpleDatatype();
-
-  String getName();
-
-  PsiElement setName(String newName);
-
-  PsiElement getNameIdentifier();
 
 }

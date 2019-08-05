@@ -2,7 +2,10 @@
     tokens = [
 
         BRACKET = 'regexp:[{}]'
-        ID = 'regexp:[a-zA-Z_][a-zA-Z0-9_]*'
+
+
+
+        ID =  'regexp:[a-zA-Z_][a-zA-Z0-9_]*'
         SEP = 'regexp::'
         WHITE_SPACE = 'regexp:\s+'
     ]
@@ -12,7 +15,7 @@
 
   parserClass="com.intellij.xtext.samples.simple.parser.SimpleParser"
 
-  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+  extends="com.intellij.xtext.samples.simple.psi.impl.SimplePsiCompositeElementImpl"
 
   psiClassPrefix="Simple"
   psiImplClassSuffix="Impl"
@@ -32,19 +35,24 @@ simpleFile ::= Type*
 
 private Type ::= (DataType | Entity | COMMENT)
 
-DataType ::= datatype  ID {
-
-
-}
-
-Entity ::= ent  ID  "{"
-    Feature*
-    "}" {
+DataType ::= datatype  ID
+{
     mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
     implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
-    methods=[SimpleEntityGetID getName setName getNameIdentifier]
+    methods=[getIdSimpleDatatype getName setName getNameIdentifier]
+}
+
+Entity ::= ent  ID (extends REFERENCE_TO_ENTITY)? "{"
+    Feature*
+    "}"
+{
+    mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
+    implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
+    methods=[getIdSimpleEntity getName setName getNameIdentifier ]
+}
+
+Feature ::= ID SEP REFERENCE_TO_DATATYPE
 
 
-
-    }
-Feature ::= ID ":" DataType
+REFERENCE_TO_DATATYPE ::= ID
+REFERENCE_TO_ENTITY ::= ID

@@ -11,11 +11,14 @@ public interface SimpleTypes {
   IElementType DATA_TYPE = new SimpleElementType("DATA_TYPE");
   IElementType ENTITY = new SimpleElementType("ENTITY");
   IElementType FEATURE = new SimpleElementType("FEATURE");
+  IElementType REFERENCE_TO_DATATYPE = new SimpleElementType("REFERENCE_TO_DATATYPE");
+  IElementType REFERENCE_TO_ENTITY = new SimpleElementType("REFERENCE_TO_ENTITY");
 
   IElementType BRACKET = new SimpleTokenType("BRACKET");
   IElementType COMMENT = new SimpleTokenType("COMMENT");
   IElementType DATATYPE = new SimpleTokenType("datatype");
   IElementType ENT = new SimpleTokenType("ent");
+  IElementType EXTENDS = new SimpleTokenType("extends");
   IElementType ID = new SimpleTokenType("ID");
   IElementType SEP = new SimpleTokenType("SEP");
 
@@ -30,6 +33,12 @@ public interface SimpleTypes {
       }
       else if (type == FEATURE) {
         return new SimpleFeatureImpl(node);
+      }
+      else if (type == REFERENCE_TO_DATATYPE) {
+        return new SimpleReferenceToDatatypeImpl(node);
+      }
+      else if (type == REFERENCE_TO_ENTITY) {
+        return new SimpleReferenceToEntityImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

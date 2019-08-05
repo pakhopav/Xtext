@@ -6,7 +6,15 @@ import com.intellij.xtext.samples.simple.psi.SimpleElementFactory;
 import com.intellij.xtext.samples.simple.psi.*;
 
 public class SimplePsiImplUtil {
-    public static String SimpleEntityGetID(SimpleEntity element) {
+
+    public static String getIdSimpleEntity(SimpleEntity element) {
+        return getID(element);
+    }
+    public static String getIdSimpleDatatype(SimpleDataType element) {
+        return getID(element);
+    }
+
+    public static <T extends PsiElement> String getID(T element) {
         ASTNode keyNode = element.getNode().findChildByType(SimpleTypes.ID);
         if (keyNode != null) {
             // IMPORTANT: Convert embedded escaped spaces to simple spaces
@@ -16,11 +24,16 @@ public class SimplePsiImplUtil {
         }
     }
 
-    public static String getName(SimpleEntity element) {
-        return SimpleEntityGetID(element);
-    }
+    public static String getName(SimpleDataType element) { return getIdSimpleDatatype(element); }
+    public static String getName(SimpleEntity element) { return getIdSimpleEntity(element); }
 
-    public static PsiElement setName(SimpleEntity element, String newName) {
+    public static PsiElement setName(SimpleDataType element, String newName) { return setNameAll(element, newName ); }
+    public static PsiElement setName(SimpleEntity element, String newName)   { return setNameAll(element, newName ); }
+
+    public static PsiElement getNameIdentifier(SimpleDataType element) { return getNameIdentifierAll(element); }
+    public static PsiElement getNameIdentifier(SimpleEntity element)   { return getNameIdentifierAll(element ); }
+
+    public static <T extends PsiElement> PsiElement setNameAll(T element, String newName) {
         ASTNode keyNode = element.getNode().findChildByType(SimpleTypes.ID);
         if (keyNode != null) {
 
@@ -31,7 +44,7 @@ public class SimplePsiImplUtil {
         return element;
     }
 
-    public static PsiElement getNameIdentifier(SimpleEntity element) {
+    public static <T extends PsiElement> PsiElement getNameIdentifierAll(T element) {
         ASTNode keyNode = element.getNode().findChildByType(SimpleTypes.ID);
         if (keyNode != null) {
             return keyNode.getPsi();

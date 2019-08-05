@@ -34,6 +34,12 @@ public class SimpleEntityImpl extends SimpleNamedElementImpl implements SimpleEn
   }
 
   @Override
+  @Nullable
+  public SimpleReferenceToEntity getReferenceToEntity() {
+    return findChildByClass(SimpleReferenceToEntity.class);
+  }
+
+  @Override
   @NotNull
   public PsiElement getId() {
     return findNotNullChildByType(ID);
@@ -46,8 +52,14 @@ public class SimpleEntityImpl extends SimpleNamedElementImpl implements SimpleEn
   }
 
   @Override
-  public String SimpleEntityGetID() {
-    return SimplePsiImplUtil.SimpleEntityGetID(this);
+  @Nullable
+  public PsiElement getExtends() {
+    return findChildByType(EXTENDS);
+  }
+
+  @Override
+  public String getIdSimpleEntity() {
+    return SimplePsiImplUtil.getIdSimpleEntity(this);
   }
 
   @Override
