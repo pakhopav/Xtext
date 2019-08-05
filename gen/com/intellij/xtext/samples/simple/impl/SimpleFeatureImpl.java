@@ -29,20 +29,20 @@ public class SimpleFeatureImpl extends SimplePsiCompositeElementImpl implements 
 
   @Override
   @NotNull
-  public SimpleReferenceToDatatype getReferenceToDatatype() {
-    return findNotNullChildByClass(SimpleReferenceToDatatype.class);
+  public PsiElement getSep() {
+    return findNotNullChildByType(SEP);
   }
 
   @Override
   @NotNull
-  public PsiElement getId() {
+  public PsiElement getXTextName() {
     return findNotNullChildByType(ID);
   }
 
   @Override
   @NotNull
-  public PsiElement getSep() {
-    return findNotNullChildByType(SEP);
+  public SimpleReferenceToDatatype getType() {
+    return findNotNullChildByClass(SimpleReferenceToDatatype.class);
   }
 
 }

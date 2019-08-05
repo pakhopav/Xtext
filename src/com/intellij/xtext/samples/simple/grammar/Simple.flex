@@ -21,6 +21,7 @@ import static com.intellij.xtext.samples.simple.psi.SimpleTypes.*; // Note that 
 ID=[a-zA-Z_][a-zA-Z0-9_]*
 
 BRACKET=[{}]
+
 SEPARATOR = :
 WHITE_SPACE=[ \t\n\x0B\f\r]+
 END_OF_LINE_COMMENT=("#"|"!")[^\r\n]*

@@ -8,10 +8,10 @@ import com.intellij.psi.PsiElement;
 public interface SimpleDataType extends SimpleNamedElement {
 
   @NotNull
-  PsiElement getId();
+  PsiElement getDatatype();
 
   @NotNull
-  PsiElement getDatatype();
+  PsiElement getXTextName();
 
   String getIdSimpleDatatype();
 

@@ -29,14 +29,14 @@ public class SimpleDataTypeImpl extends SimpleNamedElementImpl implements Simple
 
   @Override
   @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
+  public PsiElement getDatatype() {
+    return findNotNullChildByType(DATATYPE);
   }
 
   @Override
   @NotNull
-  public PsiElement getDatatype() {
-    return findNotNullChildByType(DATATYPE);
+  public PsiElement getXTextName() {
+    return findNotNullChildByType(ID);
   }
 
   @Override

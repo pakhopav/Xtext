@@ -40,19 +40,22 @@ DataType ::= datatype  ID
     mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
     implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
 
-    methods=[getIdSimpleDatatype getName setName getNameIdentifier]
+    methods=[xTextName="ID" getIdSimpleDatatype getName setName getNameIdentifier]
 }
 
-Entity ::= ent  ID  (extends REFERENCE_TO_ENTITY)? "{"
+Entity ::= ent  ID  (extends REFERENCE_TO_ENTITY  )? "{"
     Feature*
     "}"
 {
     mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
     implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
-    methods=[getIdSimpleEntity getName setName getNameIdentifier ]
+    methods=[xTextName="ID" superType="REFERENCE_TO_ENTITY" features="Feature" getIdSimpleEntity getName setName getNameIdentifier ]
 }
 
 Feature ::= ID SEP REFERENCE_TO_DATATYPE
+{
+    methods=[xTextName="ID" type="REFERENCE_TO_DATATYPE"]
+}
 
 
 REFERENCE_TO_DATATYPE ::= ID

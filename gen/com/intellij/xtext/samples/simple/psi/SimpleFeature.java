@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 public interface SimpleFeature extends PsiElement {
 
   @NotNull
-  SimpleReferenceToDatatype getReferenceToDatatype();
-
-  @NotNull
-  PsiElement getId();
-
-  @NotNull
   PsiElement getSep();
+
+  @NotNull
+  PsiElement getXTextName();
+
+  @NotNull
+  SimpleReferenceToDatatype getType();
 
 }

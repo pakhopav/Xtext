@@ -11,28 +11,7 @@ import com.intellij.xtext.samples.simple.psi.*;
 import java.util.*;
 
 public class SimpleUtil {
-    public static List<SimpleEntity> findEntities(Project project, String key) {
-        List<SimpleEntity> result = null;
-        Collection<VirtualFile> virtualFiles =
-                FileTypeIndex.getFiles(SimpleFileType.INSTANCE, GlobalSearchScope.allScope(project));
-        for (VirtualFile virtualFile : virtualFiles) {
-            SimpleFile simpleFile = (SimpleFile) PsiManager.getInstance(project).findFile(virtualFile);
-            if (simpleFile != null) {
-                SimpleEntity[] entities = PsiTreeUtil.getChildrenOfType(simpleFile, SimpleEntity.class);
-                if (entities != null) {
-                    for (SimpleEntity property : entities) {
-                        if (key.equals(property.getId().getText())) {
-                            if (result == null) {
-                                result = new ArrayList<SimpleEntity>();
-                            }
-                            result.add(property);
-                        }
-                    }
-                }
-            }
-        }
-        return result != null ? result : Collections.<SimpleEntity>emptyList();
-    }
+
     public static <T extends SimpleNamedElement> List<T> findElements(Project project, Class<T> tClass, String Id){
         List<T> result = null;
         Collection<VirtualFile> virtualFiles =

@@ -29,24 +29,6 @@ public class SimpleEntityImpl extends SimpleNamedElementImpl implements SimpleEn
 
   @Override
   @NotNull
-  public List<SimpleFeature> getFeatureList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SimpleFeature.class);
-  }
-
-  @Override
-  @Nullable
-  public SimpleReferenceToEntity getReferenceToEntity() {
-    return findChildByClass(SimpleReferenceToEntity.class);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
-  }
-
-  @Override
-  @NotNull
   public PsiElement getEnt() {
     return findNotNullChildByType(ENT);
   }
@@ -55,6 +37,24 @@ public class SimpleEntityImpl extends SimpleNamedElementImpl implements SimpleEn
   @Nullable
   public PsiElement getExtends() {
     return findChildByType(EXTENDS);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getXTextName() {
+    return findNotNullChildByType(ID);
+  }
+
+  @Override
+  @Nullable
+  public SimpleReferenceToEntity getSuperType() {
+    return findChildByClass(SimpleReferenceToEntity.class);
+  }
+
+  @Override
+  @NotNull
+  public List<SimpleFeature> getFeatures() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SimpleFeature.class);
   }
 
   @Override

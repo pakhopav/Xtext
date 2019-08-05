@@ -50,7 +50,7 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ent  ID (extends REFERENCE_TO_ENTITY)? "{"
+  // ent  ID  (extends REFERENCE_TO_ENTITY  )? "{"
   //     Feature*
   //     "}"
   public static boolean Entity(PsiBuilder b, int l) {
@@ -67,7 +67,7 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // (extends REFERENCE_TO_ENTITY)?
+  // (extends REFERENCE_TO_ENTITY  )?
   private static boolean Entity_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Entity_2")) return false;
     Entity_2_0(b, l + 1);
