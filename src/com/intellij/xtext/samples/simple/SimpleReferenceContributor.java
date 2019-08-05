@@ -21,9 +21,14 @@ public class SimpleReferenceContributor extends PsiReferenceContributor {
                                                                  @NotNull ProcessingContext
                                                                          context) {
                         SimpleReferenceToEntity simpleRef = (SimpleReferenceToEntity) element;
-                        String value = simpleRef.getText() instanceof String ? (String) simpleRef.getId().getText() : null;
+                        String value = simpleRef.getText() instanceof String ?  simpleRef.getId().getText() : null;
+
                         return new PsiReference[]{
-                            new SimpleReference(element, new TextRange(0, value.length()), SimpleEntity.class)};
+                                new SimpleReference(element, new TextRange(0, value.length()), SimpleEntity.class)};
+
+
+
+
                     }
                 });
         registrar.registerReferenceProvider(PlatformPatterns.psiElement(SimpleReferenceToDatatype.class).withLanguage(SimpleLanguage.INSTANCE),

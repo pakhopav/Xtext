@@ -52,15 +52,15 @@ public class SimpleReference<T extends SimpleNamedElement> extends PsiReferenceB
     }
 
 
-    public <T extends SimpleNamedElement> Object[] myGetVariants( final Class<T> tClass) {
+    public <T extends SimpleNamedElement> Object[] myGetVariants(Class<T> tClass) {
         Project project = myElement.getProject();
-        List<T> dataTypes = SimpleUtil.findElements(project,tClass);
+        List<T> elements = SimpleUtil.findElements(project,tClass);
         List<LookupElement> variants = new ArrayList<LookupElement>();
-        for (final T dataType : dataTypes) {
-            if (dataType.getName() != null && dataType.getName().length() > 0) {
-                variants.add(LookupElementBuilder.create(dataType).
+        for (final T element : elements) {
+            if (element.getName() != null && element.getName().length() > 0) {
+                variants.add(LookupElementBuilder.create(element).
                         withIcon(SimpleIcons.FILE).
-                        withTypeText(dataType.getContainingFile().getName())
+                        withTypeText(element.getContainingFile().getName())
                 );
             }
         }

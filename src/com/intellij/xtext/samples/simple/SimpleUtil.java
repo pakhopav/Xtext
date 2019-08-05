@@ -56,7 +56,7 @@ public class SimpleUtil {
         return result != null ? result : Collections.<T>emptyList();
     }
     public static <T extends PsiElement> List<T> findElements(Project project, Class<T> tClass){
-        List<T> result = null;
+        List<T> result = new ArrayList<>();
         Collection<VirtualFile> virtualFiles =
                 FileTypeIndex.getFiles(SimpleFileType.INSTANCE, GlobalSearchScope.allScope(project));
         for (VirtualFile virtualFile : virtualFiles) {

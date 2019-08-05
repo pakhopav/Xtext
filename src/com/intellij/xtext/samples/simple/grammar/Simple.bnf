@@ -39,10 +39,11 @@ DataType ::= datatype  ID
 {
     mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
     implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
+
     methods=[getIdSimpleDatatype getName setName getNameIdentifier]
 }
 
-Entity ::= ent  ID (extends REFERENCE_TO_ENTITY)? "{"
+Entity ::= ent  ID  (extends REFERENCE_TO_ENTITY)? "{"
     Feature*
     "}"
 {
