@@ -8,18 +8,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.intellij.xtext.samples.simple.psi.SimpleTypes.*;
-import com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl;
+import com.intellij.xtext.samples.simple.psi.impl.SimplePsiCompositeElementImpl;
 import com.intellij.xtext.samples.simple.psi.*;
 import com.intellij.xtext.samples.simple.psi.impl.SimplePsiImplUtil;
 
-public class SimpleDataTypeImpl extends SimpleNamedElementImpl implements SimpleDataType {
+public class SimpleJvmTypeParameterImpl extends SimplePsiCompositeElementImpl implements SimpleJvmTypeParameter {
 
-  public SimpleDataTypeImpl(@NotNull ASTNode node) {
+  public SimpleJvmTypeParameterImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SimpleVisitor visitor) {
-    visitor.visitDataType(this);
+    visitor.visitJvmTypeParameter(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -29,34 +29,20 @@ public class SimpleDataTypeImpl extends SimpleNamedElementImpl implements Simple
 
   @Override
   @NotNull
-  public PsiElement getDatatype() {
-    return findNotNullChildByType(DATATYPE);
+  public List<SimpleJvmUpperBoundAnded> getJvmUpperBoundAndedList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, SimpleJvmUpperBoundAnded.class);
+  }
+
+  @Override
+  @NotNull
+  public SimpleValidID getValidID() {
+    return findNotNullChildByClass(SimpleValidID.class);
   }
 
   @Override
   @Nullable
-  public PsiElement getXTextName() {
-    return findChildByType(ID);
-  }
-
-  @Override
-  public String getIdSimpleDatatype() {
-    return SimplePsiImplUtil.getIdSimpleDatatype(this);
-  }
-
-  @Override
-  public String getName() {
-    return SimplePsiImplUtil.getName(this);
-  }
-
-  @Override
-  public PsiElement setName(String newName) {
-    return SimplePsiImplUtil.setName(this, newName);
-  }
-
-  @Override
-  public PsiElement getNameIdentifier() {
-    return SimplePsiImplUtil.getNameIdentifier(this);
+  public SimpleJvmUpperBound getConstraints() {
+    return findChildByClass(SimpleJvmUpperBound.class);
   }
 
 }

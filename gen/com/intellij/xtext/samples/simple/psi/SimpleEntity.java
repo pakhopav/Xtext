@@ -13,7 +13,7 @@ public interface SimpleEntity extends SimpleNamedElement {
   @Nullable
   PsiElement getExtends();
 
-  @NotNull
+  @Nullable
   PsiElement getXTextName();
 
   @Nullable

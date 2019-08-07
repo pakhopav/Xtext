@@ -5,9 +5,35 @@
 
 
 
-        ID =  'regexp:[a-zA-Z_][a-zA-Z0-9_]*'
+        ID =  'regexp:^?[a-zA-Z$_][a-zA-Z0-9$_]*'
+        INT=  'regexp:[0-9]+'
+        HEX = 'regexp:(0x|0X) (0-9|a-f|A-F|_)+ (# ((b|B) (i|I) | (l|L)))?'
+        STRING = "regexp:(\"([^\"\\]|\\.)*\"|'([^'\\]|\\.)*')"
+        ML_COMMENT = 'regexp:\/\*(?s).*\*\/'
+        SL_COMMENT = 'regexp: //.*'
         SEP = 'regexp::'
         WHITE_SPACE = 'regexp:\s+'
+        //terminal ID:
+        //    '^'?('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+        //
+        //terminal INT returns ecore::EInt:
+        //    ('0'..'9')+;
+        //
+        //terminal STRING:
+        //    '"' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"') )* '"' |
+        //    "'" ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|"'") )* "'";
+        //
+        //terminal ML_COMMENT:
+        //    '/*' -> '*/';
+        //
+        //terminal SL_COMMENT:
+        //    '//' !('\n'|'\r')* ('\r'? '\n')?;
+        //
+        //terminal WS:
+        //    (' '|'\t'|'\r'|'\n')+;
+        //
+        //terminal ANY_OTHER:
+        //    .;
     ]
 
 
@@ -37,6 +63,7 @@ private Type ::= (DataType | Entity | COMMENT)
 
 DataType ::= datatype  ID
 {
+    pin=1
     mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
     implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
 
@@ -47,6 +74,7 @@ Entity ::= ent  ID  (extends REFERENCE_TO_ENTITY  )? "{"
     Feature*
     "}"
 {
+    pin=1
     mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
     implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
     methods=[xTextName="ID" superType="REFERENCE_TO_ENTITY" features="Feature" getIdSimpleEntity getName setName getNameIdentifier ]
@@ -60,3 +88,92 @@ Feature ::= ID SEP REFERENCE_TO_DATATYPE
 
 REFERENCE_TO_DATATYPE ::= ID
 REFERENCE_TO_ENTITY ::= ID
+
+
+
+//                              IMPORTING XTYPE
+JvmTypeReference::=
+	JvmParameterizedTypeReference ( ArrayBrackets)*
+	| XFunctionTypeRef
+
+ArrayBrackets::=
+	'[' ']'
+
+
+XFunctionTypeRef::=
+	('(' (JvmTypeReference (',' JvmTypeReference)*)? ')')? '=>' JvmTypeReference
+{
+    methods=[paramTypes="JvmTypeReference"]
+}
+
+
+JvmParameterizedTypeReference::=
+	REFERENCE_TO_QualifiedName (
+		'<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>'
+		('.' REFERENCE_TO_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
+	)?
+
+JvmArgumentTypeReference::=
+	JvmTypeReference | JvmWildcardTypeReference
+
+JvmWildcardTypeReference::=
+                         '?' (
+                          JvmUpperBound (JvmUpperBoundAnded)*
+                        | JvmLowerBound (JvmLowerBoundAnded)*
+                        )?
+{
+    methods=[constraints="JvmUpperBound"
+            ]
+}
+
+JvmUpperBound::=
+	'extends' JvmTypeReference
+{
+    methods=[typeReference="JvmTypeReference"]
+}
+
+JvmUpperBoundAnded::=
+	'&' JvmTypeReference
+{
+    	    methods=[typeReference="JvmTypeReference"]
+}
+
+JvmLowerBound::=
+	'super' JvmTypeReference
+{
+	    methods=[typeReference="JvmTypeReference"]
+}
+
+JvmLowerBoundAnded::=
+	'&' JvmTypeReference
+{
+	    methods=[typeReference="JvmTypeReference"]
+}
+
+JvmTypeParameter::= ValidID (JvmUpperBound (JvmUpperBoundAnded)*)?
+{
+    methods=[constraints="JvmUpperBound"
+             ]
+}
+
+QualifiedName::= ValidID ("." ValidID)*
+
+QualifiedNameWithWildcard::=  QualifiedName ".*"
+
+ValidID::= ID
+
+XImportSection::= XImportDeclaration+
+                {
+                methods=[importDeclarations="XImportDeclaration"]
+                }
+
+
+XImportDeclaration::= "import" ("static" ("extension")? REFERENCE_TO_QualifiedNameInStaticImport ("*" | ValidID))
+                     | REFERENCE_TO_QualifiedName
+                     | QualifiedNameWithWildcard
+                     {
+                            methods=[importedType="REFERENCE_TO_QualifiedNameInStaticImport"
+
+                                     importedNamespace="QualifiedNameWithWildcard"]
+                     }
+QualifiedNameInStaticImport::= (ValidID "." )+

@@ -8,18 +8,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static com.intellij.xtext.samples.simple.psi.SimpleTypes.*;
-import com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl;
+import com.intellij.xtext.samples.simple.psi.impl.SimplePsiCompositeElementImpl;
 import com.intellij.xtext.samples.simple.psi.*;
 import com.intellij.xtext.samples.simple.psi.impl.SimplePsiImplUtil;
 
-public class SimpleDataTypeImpl extends SimpleNamedElementImpl implements SimpleDataType {
+public class SimpleXImportDeclarationImpl extends SimplePsiCompositeElementImpl implements SimpleXImportDeclaration {
 
-  public SimpleDataTypeImpl(@NotNull ASTNode node) {
+  public SimpleXImportDeclarationImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SimpleVisitor visitor) {
-    visitor.visitDataType(this);
+    visitor.visitXImportDeclaration(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -28,35 +28,27 @@ public class SimpleDataTypeImpl extends SimpleNamedElementImpl implements Simple
   }
 
   @Override
-  @NotNull
-  public PsiElement getDatatype() {
-    return findNotNullChildByType(DATATYPE);
+  @Nullable
+  public SimpleValidID getValidID() {
+    return findChildByClass(SimpleValidID.class);
   }
 
   @Override
   @Nullable
-  public PsiElement getXTextName() {
-    return findChildByType(ID);
+  public PsiElement getREFERENCETOQualifiedName() {
+    return findChildByType(REFERENCE_TO_QUALIFIEDNAME);
   }
 
   @Override
-  public String getIdSimpleDatatype() {
-    return SimplePsiImplUtil.getIdSimpleDatatype(this);
+  @Nullable
+  public PsiElement getImportedType() {
+    return findChildByType(REFERENCE_TO_QUALIFIEDNAMEINSTATICIMPORT);
   }
 
   @Override
-  public String getName() {
-    return SimplePsiImplUtil.getName(this);
-  }
-
-  @Override
-  public PsiElement setName(String newName) {
-    return SimplePsiImplUtil.setName(this, newName);
-  }
-
-  @Override
-  public PsiElement getNameIdentifier() {
-    return SimplePsiImplUtil.getNameIdentifier(this);
+  @Nullable
+  public SimpleQualifiedNameWithWildcard getImportedNamespace() {
+    return findChildByClass(SimpleQualifiedNameWithWildcard.class);
   }
 
 }

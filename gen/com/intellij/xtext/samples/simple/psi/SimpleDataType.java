@@ -10,7 +10,7 @@ public interface SimpleDataType extends SimpleNamedElement {
   @NotNull
   PsiElement getDatatype();
 
-  @NotNull
+  @Nullable
   PsiElement getXTextName();
 
   String getIdSimpleDatatype();

@@ -40,9 +40,9 @@ public class SimpleEntityImpl extends SimpleNamedElementImpl implements SimpleEn
   }
 
   @Override
-  @NotNull
+  @Nullable
   public PsiElement getXTextName() {
-    return findNotNullChildByType(ID);
+    return findChildByType(ID);
   }
 
   @Override
