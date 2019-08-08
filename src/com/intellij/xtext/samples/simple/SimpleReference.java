@@ -4,7 +4,7 @@ import com.intellij.codeInsight.lookup.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.xtext.samples.simple.psi.SimpleDataType;
+
 import com.intellij.xtext.samples.simple.psi.SimpleEntity;
 import com.intellij.xtext.samples.simple.psi.SimpleNamedElement;
 import cucumber.api.java.ro.Si;

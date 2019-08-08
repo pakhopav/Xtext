@@ -1,21 +1,28 @@
 grammar org.example.domainmodel.Domainmodel with
-                                      org.eclipse.xtext.common.Terminals
+                                      org.eclipse.xtext.xbase.Xbase
 
 generate domainmodel "http://www.example.org/domainmodel/Domainmodel"
 
-Domainmodel :
-    (elements+=Type)*;
+Domainmodel:
+    importSection=XImportSection?
+    elements+=AbstractElement*;
 
-Type:
-    DataType | Entity | COMMENT;
+AbstractElement:
+    PackageDeclaration | Entity;
 
-DataType:
-    'datatype' ID;
+PackageDeclaration:
+    'package' name=QualifiedName '{'
+        elements+=AbstractElement*
+    '}';
 
 Entity:
-    'entity' name=ID ('extends' superType=[Entity])? '{'
-        (features+=Feature)*
+    'entity' name=ValidID ('extends' superType=JvmTypeReference)? '{'
+        features+=Feature*
     '}';
 
 Feature:
-    name=ID ':' type=[DataType];
+    Property ;
+
+Property:
+    name=ValidID ':' type=JvmTypeReference;
+

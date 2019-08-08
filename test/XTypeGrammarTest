@@ -1,0 +1,19 @@
+import A;
+import static a.*;
+import extension.s
+import static extension a.         a.    s   . a. *
+
+
+entity C extends a<b>.c<? extends A>{
+"test1" : awd.awd[]
+"test1" : a<b>
+"test1" : a<b>.c<? extends A>
+"test1" : a<? super wad>
+"test1" : a<? super wad & a & a.asd[][][] >
+"test1" :  (a)=>asd
+"test1" : (a<? extends wad & a>) =>  a  <? super wad>
+"test1" : a<a>.a<a>.a<a>
+"test1" : z<? super wad & A<a<a<(a)=>a<a.a.a.a.a>>>>>
+"test1" : a
+"test1" : ^_a$asd234____asd$$$$$$$$.a[]
+}

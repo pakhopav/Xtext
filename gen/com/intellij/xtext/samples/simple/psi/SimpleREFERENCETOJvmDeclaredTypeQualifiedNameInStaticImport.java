@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SimpleFeature extends PsiElement {
+public interface SimpleREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImport extends PsiElement {
 
   @NotNull
-  SimpleProperty getProperty();
+  SimpleQualifiedNameInStaticImport getQualifiedNameInStaticImport();
 
 }

@@ -12,14 +12,14 @@ import com.intellij.xtext.samples.simple.psi.impl.SimplePsiCompositeElementImpl;
 import com.intellij.xtext.samples.simple.psi.*;
 import com.intellij.xtext.samples.simple.psi.impl.SimplePsiImplUtil;
 
-public class SimpleReferenceToEntityImpl extends SimplePsiCompositeElementImpl implements SimpleReferenceToEntity {
+public class SimpleREFERENCETOJvmTypeValidIDImpl extends SimplePsiCompositeElementImpl implements SimpleREFERENCETOJvmTypeValidID {
 
-  public SimpleReferenceToEntityImpl(@NotNull ASTNode node) {
+  public SimpleREFERENCETOJvmTypeValidIDImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SimpleVisitor visitor) {
-    visitor.visitReferenceToEntity(this);
+    visitor.visitREFERENCETOJvmTypeValidID(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -29,8 +29,8 @@ public class SimpleReferenceToEntityImpl extends SimplePsiCompositeElementImpl i
 
   @Override
   @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
+  public SimpleValidID getValidID() {
+    return findNotNullChildByClass(SimpleValidID.class);
   }
 
 }

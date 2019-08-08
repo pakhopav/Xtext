@@ -1,0 +1,85 @@
+JvmTypeReference::=
+	JvmParameterizedTypeReference ( ArrayBrackets)*
+	| XFunctionTypeRef
+
+ArrayBrackets::=
+	'[' ']'
+
+
+XFunctionTypeRef::=
+	('(' (JvmTypeReference (',' JvmTypeReference)*)? ')')? '=>' JvmTypeReference
+{
+    methods=[paramTypes="JvmTypeReference"]
+}
+
+
+JvmParameterizedTypeReference::=
+	REFERENCE_TO_QualifiedName (
+		'<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>'
+		('.' REFERENCE_TO_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
+	)?
+
+JvmArgumentTypeReference::=
+	JvmTypeReference | JvmWildcardTypeReference
+
+JvmWildcardTypeReference::=
+                         '?' (
+                          JvmUpperBound (JvmUpperBoundAnded)*
+                        | JvmLowerBound (JvmLowerBoundAnded)*
+                        )?
+{
+    methods=[constraints="JvmUpperBound"
+            ]
+}
+
+JvmUpperBound::=
+	'extends' JvmTypeReference
+{
+    methods=[typeReference="JvmTypeReference"]
+}
+
+JvmUpperBoundAnded::=
+	'&' JvmTypeReference
+{
+    	    methods=[typeReference="JvmTypeReference"]
+}
+
+JvmLowerBound::=
+	'super' JvmTypeReference
+{
+	    methods=[typeReference="JvmTypeReference"]
+}
+
+JvmLowerBoundAnded::=
+	'&' JvmTypeReference
+{
+	    methods=[typeReference="JvmTypeReference"]
+}
+
+JvmTypeParameter::= ValidID (JvmUpperBound (JvmUpperBoundAnded)*)?
+{
+    methods=[constraints="JvmUpperBound"
+             ]
+}
+
+QualifiedName::= ValidID ("." ValidID)*
+
+QualifiedNameWithWildcard::=  QualifiedName ".*"
+
+ValidID::= ID
+
+XImportSection::= XImportDeclaration+
+                {
+                methods=[importDeclarations="XImportDeclaration"]
+                }
+
+
+XImportDeclaration::= "import" ("static" ("extension")? REFERENCE_TO_QualifiedNameInStaticImport ("*" | ValidID))
+                     | REFERENCE_TO_QualifiedName
+                     | QualifiedNameWithWildcard
+                     {
+                            methods=[importedType="REFERENCE_TO_QualifiedNameInStaticImport"
+
+                                     importedNamespace="QualifiedNameWithWildcard"]
+                     }
+QualifiedNameInStaticImport::= (ValidID "." )+

@@ -8,13 +8,13 @@ import com.intellij.psi.PsiElement;
 public interface SimpleXImportDeclaration extends PsiElement {
 
   @Nullable
+  SimpleREFERENCETOJvmDeclaredTypeQualifiedName getREFERENCETOJvmDeclaredTypeQualifiedName();
+
+  @Nullable
   SimpleValidID getValidID();
 
   @Nullable
-  PsiElement getREFERENCETOQualifiedName();
-
-  @Nullable
-  PsiElement getImportedType();
+  SimpleREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImport getImportedType();
 
   @Nullable
   SimpleQualifiedNameWithWildcard getImportedNamespace();

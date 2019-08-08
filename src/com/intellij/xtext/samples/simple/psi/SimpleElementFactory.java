@@ -1,6 +1,6 @@
 package com.intellij.xtext.samples.simple.psi;
 
-import com.intellij.openapi.project.Project;
+import com. intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.xtext.samples.simple.SimpleFileType;
 import com.intellij.xtext.samples.simple.psi.SimpleEntity;

@@ -39,15 +39,17 @@ public class SimpleSyntaxHighlighter extends SyntaxHighlighterBase {
     @NotNull
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-        if (tokenType.equals(SimpleTypes.ENT) ||tokenType.equals(SimpleTypes.DATATYPE ) || tokenType.equals(SimpleTypes.BRACKET)) {
+        if (tokenType.equals(SimpleTypes.KEYWORD_ENTITY) ||tokenType.equals(SimpleTypes.KEYWORD_PAKAGE )||tokenType.equals(SimpleTypes.KEYWORD_EXTENDS )  ) {
             return  KEY_KEYS;
-        }else if (tokenType.equals(SimpleTypes.ID)){
+        }else if (tokenType.equals(SimpleTypes.STRING)){
             return VALUE_KEYS;
 
-        } else if (tokenType.equals(SimpleTypes.COMMENT)) {
+        } else if (tokenType.equals(SimpleTypes.ML_COMMENT)) {
             return COMMENT_KEYS;
-        } else if (tokenType.equals(TokenType.BAD_CHARACTER)) {
-            return BAD_CHAR_KEYS;
+        } else if (tokenType.equals(SimpleTypes.SL_COMMENT)) {
+            return COMMENT_KEYS;
+//        } else if (tokenType.equals(TokenType.BAD_CHARACTER)) {
+//            return BAD_CHAR_KEYS;
         } else {
             return EMPTY_KEYS;
         }

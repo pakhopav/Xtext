@@ -12,14 +12,14 @@ import com.intellij.xtext.samples.simple.psi.impl.SimplePsiCompositeElementImpl;
 import com.intellij.xtext.samples.simple.psi.*;
 import com.intellij.xtext.samples.simple.psi.impl.SimplePsiImplUtil;
 
-public class SimpleReferenceToDatatypeImpl extends SimplePsiCompositeElementImpl implements SimpleReferenceToDatatype {
+public class SimpleREFERENCETOJvmTypeQualifiedNameImpl extends SimplePsiCompositeElementImpl implements SimpleREFERENCETOJvmTypeQualifiedName {
 
-  public SimpleReferenceToDatatypeImpl(@NotNull ASTNode node) {
+  public SimpleREFERENCETOJvmTypeQualifiedNameImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SimpleVisitor visitor) {
-    visitor.visitReferenceToDatatype(this);
+    visitor.visitREFERENCETOJvmTypeQualifiedName(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -29,8 +29,8 @@ public class SimpleReferenceToDatatypeImpl extends SimplePsiCompositeElementImpl
 
   @Override
   @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
+  public SimpleQualifiedName getQualifiedName() {
+    return findNotNullChildByClass(SimpleQualifiedName.class);
   }
 
 }

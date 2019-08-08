@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SimpleReferenceToDatatype extends PsiElement {
+public interface SimpleREFERENCETOJvmDeclaredTypeQualifiedName extends PsiElement {
 
   @NotNull
-  PsiElement getId();
+  SimpleQualifiedName getQualifiedName();
 
 }

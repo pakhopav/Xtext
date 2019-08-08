@@ -11,10 +11,6 @@ public class SimpleVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitDataType(@NotNull SimpleDataType o) {
-    visitNamedElement(o);
-  }
-
   public void visitEntity(@NotNull SimpleEntity o) {
     visitNamedElement(o);
   }
@@ -59,6 +55,14 @@ public class SimpleVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitPackageDeclaration(@NotNull SimplePackageDeclaration o) {
+    visitPsiElement(o);
+  }
+
+  public void visitProperty(@NotNull SimpleProperty o) {
+    visitPsiElement(o);
+  }
+
   public void visitQualifiedName(@NotNull SimpleQualifiedName o) {
     visitPsiElement(o);
   }
@@ -71,11 +75,19 @@ public class SimpleVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitReferenceToDatatype(@NotNull SimpleReferenceToDatatype o) {
+  public void visitREFERENCETOJvmDeclaredTypeQualifiedName(@NotNull SimpleREFERENCETOJvmDeclaredTypeQualifiedName o) {
     visitPsiElement(o);
   }
 
-  public void visitReferenceToEntity(@NotNull SimpleReferenceToEntity o) {
+  public void visitREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImport(@NotNull SimpleREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImport o) {
+    visitPsiElement(o);
+  }
+
+  public void visitREFERENCETOJvmTypeQualifiedName(@NotNull SimpleREFERENCETOJvmTypeQualifiedName o) {
+    visitPsiElement(o);
+  }
+
+  public void visitREFERENCETOJvmTypeValidID(@NotNull SimpleREFERENCETOJvmTypeValidID o) {
     visitPsiElement(o);
   }
 

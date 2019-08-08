@@ -7,22 +7,14 @@ import com.intellij.psi.PsiElement;
 
 public interface SimpleEntity extends SimpleNamedElement {
 
-  @NotNull
-  PsiElement getEnt();
+  @Nullable
+  SimpleValidID getValidID();
 
   @Nullable
-  PsiElement getExtends();
-
-  @Nullable
-  PsiElement getXTextName();
-
-  @Nullable
-  SimpleReferenceToEntity getSuperType();
+  SimpleJvmTypeReference getSuperType();
 
   @NotNull
   List<SimpleFeature> getFeatures();
-
-  String getIdSimpleEntity();
 
   String getName();
 

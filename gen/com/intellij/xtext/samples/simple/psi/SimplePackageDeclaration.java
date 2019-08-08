@@ -5,9 +5,15 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SimpleFeature extends PsiElement {
+public interface SimplePackageDeclaration extends PsiElement {
 
   @NotNull
-  SimpleProperty getProperty();
+  List<SimpleEntity> getEntityList();
+
+  @NotNull
+  List<SimplePackageDeclaration> getPackageDeclarationList();
+
+  @NotNull
+  SimpleQualifiedName getXname();
 
 }

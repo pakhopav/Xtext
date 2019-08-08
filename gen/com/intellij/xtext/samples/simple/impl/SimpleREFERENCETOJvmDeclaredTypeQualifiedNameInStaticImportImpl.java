@@ -12,14 +12,14 @@ import com.intellij.xtext.samples.simple.psi.impl.SimplePsiCompositeElementImpl;
 import com.intellij.xtext.samples.simple.psi.*;
 import com.intellij.xtext.samples.simple.psi.impl.SimplePsiImplUtil;
 
-public class SimpleJvmParameterizedTypeReferenceImpl extends SimplePsiCompositeElementImpl implements SimpleJvmParameterizedTypeReference {
+public class SimpleREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImportImpl extends SimplePsiCompositeElementImpl implements SimpleREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImport {
 
-  public SimpleJvmParameterizedTypeReferenceImpl(@NotNull ASTNode node) {
+  public SimpleREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImportImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull SimpleVisitor visitor) {
-    visitor.visitJvmParameterizedTypeReference(this);
+    visitor.visitREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImport(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
@@ -29,20 +29,8 @@ public class SimpleJvmParameterizedTypeReferenceImpl extends SimplePsiCompositeE
 
   @Override
   @NotNull
-  public List<SimpleJvmArgumentTypeReference> getJvmArgumentTypeReferenceList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SimpleJvmArgumentTypeReference.class);
-  }
-
-  @Override
-  @NotNull
-  public SimpleREFERENCETOJvmTypeQualifiedName getREFERENCETOJvmTypeQualifiedName() {
-    return findNotNullChildByClass(SimpleREFERENCETOJvmTypeQualifiedName.class);
-  }
-
-  @Override
-  @NotNull
-  public List<SimpleREFERENCETOJvmTypeValidID> getREFERENCETOJvmTypeValidIDList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, SimpleREFERENCETOJvmTypeValidID.class);
+  public SimpleQualifiedNameInStaticImport getQualifiedNameInStaticImport() {
+    return findNotNullChildByClass(SimpleQualifiedNameInStaticImport.class);
   }
 
 }

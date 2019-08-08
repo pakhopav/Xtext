@@ -1,40 +1,30 @@
 {
     tokens = [
 
-        BRACKET = 'regexp:[{}]'
+        BRACKET = 'regexp:[{}\[\]<>]'
 
 
 
         ID =  'regexp:^?[a-zA-Z$_][a-zA-Z0-9$_]*'
         INT=  'regexp:[0-9]+'
+
+        OPERATORS = 'regexp:[+\-*/]'
         HEX = 'regexp:(0x|0X) (0-9|a-f|A-F|_)+ (# ((b|B) (i|I) | (l|L)))?'
         STRING = "regexp:(\"([^\"\\]|\\.)*\"|'([^'\\]|\\.)*')"
         ML_COMMENT = 'regexp:\/\*(?s).*\*\/'
         SL_COMMENT = 'regexp: //.*'
         SEP = 'regexp::'
         WHITE_SPACE = 'regexp:\s+'
-        //terminal ID:
-        //    '^'?('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
-        //
-        //terminal INT returns ecore::EInt:
-        //    ('0'..'9')+;
-        //
-        //terminal STRING:
-        //    '"' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"') )* '"' |
-        //    "'" ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|"'") )* "'";
-        //
-        //terminal ML_COMMENT:
-        //    '/*' -> '*/';
-        //
-        //terminal SL_COMMENT:
-        //    '//' !('\n'|'\r')* ('\r'? '\n')?;
-        //
-        //terminal WS:
-        //    (' '|'\t'|'\r'|'\n')+;
-        //
-        //terminal ANY_OTHER:
-        //    .;
+        DOT = 'regexp:\.'
+        COMMA = 'regexp:,'
+
+
+        keyword_pakage = 'regexp:pakage'
+        keyword_entity = 'regexp:entity'
+        keyword_extends = 'regexp:extends'
+
     ]
+
 
 
 
@@ -42,7 +32,6 @@
   parserClass="com.intellij.xtext.samples.simple.parser.SimpleParser"
 
   extends="com.intellij.xtext.samples.simple.psi.impl.SimplePsiCompositeElementImpl"
-
   psiClassPrefix="Simple"
   psiImplClassSuffix="Impl"
   psiPackage="com.intellij.xtext.samples.simple.psi"
@@ -57,37 +46,58 @@
   generateTokens=true
 }
 
-simpleFile ::= Type*
-
-private Type ::= (DataType | Entity | COMMENT)
-
-DataType ::= datatype  ID
+simpleFile ::= XImportSection? AbstractElement*
 {
-    pin=1
-    mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
-    implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
-
-    methods=[xTextName="ID" getIdSimpleDatatype getName setName getNameIdentifier]
+    methods=[importSection="XImportSection"
+             elements="AbstractElement"]
 }
 
-Entity ::= ent  ID  (extends REFERENCE_TO_ENTITY  )? "{"
+private AbstractElement::=
+    PackageDeclaration | Entity
+
+PackageDeclaration::=
+    'package' QualifiedName '{'
+        AbstractElement*
+    '}'
+{
+    methods=[Xname="QualifiedName"
+             elements="AbstractElement"]
+}
+
+
+Entity ::='entity'  ValidID  ('extends' JvmTypeReference  )? "{"
     Feature*
     "}"
 {
     pin=1
+
     mixin="com.intellij.xtext.samples.simple.psi.impl.SimpleNamedElementImpl"
     implements="com.intellij.xtext.samples.simple.psi.SimpleNamedElement"
-    methods=[xTextName="ID" superType="REFERENCE_TO_ENTITY" features="Feature" getIdSimpleEntity getName setName getNameIdentifier ]
+    methods=[superType="JvmTypeReference" features="Feature"  getName setName getNameIdentifier ]
 }
 
-Feature ::= ID SEP REFERENCE_TO_DATATYPE
+ Feature ::= Property
+
+
+Property::=
+    STRING ':' JvmTypeReference
 {
-    methods=[xTextName="ID" type="REFERENCE_TO_DATATYPE"]
+
+
+    methods=[Xname="STRING"
+            type="JvmTypeReference"]
 }
 
 
-REFERENCE_TO_DATATYPE ::= ID
-REFERENCE_TO_ENTITY ::= ID
+
+//                             REFERENCE SECTION
+
+REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport::=QualifiedNameInStaticImport
+REFERENCE_TO_JvmDeclaredType_QualifiedName::=QualifiedName
+REFERENCE_TO_JvmType_QualifiedName::=QualifiedName
+REFERENCE_TO_JvmType_ValidID::=ValidID
+
+
 
 
 
@@ -108,9 +118,9 @@ XFunctionTypeRef::=
 
 
 JvmParameterizedTypeReference::=
-	REFERENCE_TO_QualifiedName (
+	REFERENCE_TO_JvmType_QualifiedName (
 		'<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>'
-		('.' REFERENCE_TO_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
+		('.' REFERENCE_TO_JvmType_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
 	)?
 
 JvmArgumentTypeReference::=
@@ -156,11 +166,11 @@ JvmTypeParameter::= ValidID (JvmUpperBound (JvmUpperBoundAnded)*)?
              ]
 }
 
-QualifiedName::= ValidID ("." ValidID)*
+QualifiedName::= ValidID ("."ValidID)*
 
 QualifiedNameWithWildcard::=  QualifiedName ".*"
 
-ValidID::= ID
+ValidID::=ID
 
 XImportSection::= XImportDeclaration+
                 {
@@ -168,12 +178,14 @@ XImportSection::= XImportDeclaration+
                 }
 
 
-XImportDeclaration::= "import" ("static" ("extension")? REFERENCE_TO_QualifiedNameInStaticImport ("*" | ValidID))
-                     | REFERENCE_TO_QualifiedName
-                     | QualifiedNameWithWildcard
-                     {
-                            methods=[importedType="REFERENCE_TO_QualifiedNameInStaticImport"
-
-                                     importedNamespace="QualifiedNameWithWildcard"]
-                     }
+XImportDeclaration::= "import" (
+                    ("static" ("extension")? REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport ("*" | ValidID))
+                     | REFERENCE_TO_JvmDeclaredType_QualifiedName
+                     | QualifiedNameWithWildcard) ';'?
+ {
+        pin=1
+        methods=[importedType="REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport"
+        importedNamespace="QualifiedNameWithWildcard"]
+ }
 QualifiedNameInStaticImport::= (ValidID "." )+
+

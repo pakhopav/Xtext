@@ -29,20 +29,20 @@ public class SimpleXImportDeclarationImpl extends SimplePsiCompositeElementImpl 
 
   @Override
   @Nullable
+  public SimpleREFERENCETOJvmDeclaredTypeQualifiedName getREFERENCETOJvmDeclaredTypeQualifiedName() {
+    return findChildByClass(SimpleREFERENCETOJvmDeclaredTypeQualifiedName.class);
+  }
+
+  @Override
+  @Nullable
   public SimpleValidID getValidID() {
     return findChildByClass(SimpleValidID.class);
   }
 
   @Override
   @Nullable
-  public PsiElement getREFERENCETOQualifiedName() {
-    return findChildByType(REFERENCE_TO_QUALIFIEDNAME);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getImportedType() {
-    return findChildByType(REFERENCE_TO_QUALIFIEDNAMEINSTATICIMPORT);
+  public SimpleREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImport getImportedType() {
+    return findChildByClass(SimpleREFERENCETOJvmDeclaredTypeQualifiedNameInStaticImport.class);
   }
 
   @Override

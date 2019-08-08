@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface SimpleFeature extends PsiElement {
+public interface SimpleREFERENCETOJvmTypeValidID extends PsiElement {
 
   @NotNull
-  SimpleProperty getProperty();
+  SimpleValidID getValidID();
 
 }

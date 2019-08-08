@@ -38,6 +38,16 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // PackageDeclaration | Entity
+  static boolean AbstractElement(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "AbstractElement")) return false;
+    boolean r;
+    r = PackageDeclaration(b, l + 1);
+    if (!r) r = Entity(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
   // '[' ']'
   public static boolean ArrayBrackets(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "ArrayBrackets")) return false;
@@ -50,30 +60,17 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // datatype  ID
-  public static boolean DataType(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "DataType")) return false;
-    if (!nextTokenIs(b, DATATYPE)) return false;
-    boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, DATA_TYPE, null);
-    r = consumeTokens(b, 1, DATATYPE, ID);
-    p = r; // pin = 1
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
-  }
-
-  /* ********************************************************** */
-  // ent  ID  (extends REFERENCE_TO_ENTITY  )? "{"
+  // 'entity'  ValidID  ('extends' JvmTypeReference  )? "{"
   //     Feature*
   //     "}"
   public static boolean Entity(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Entity")) return false;
-    if (!nextTokenIs(b, ENT)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, ENTITY, null);
-    r = consumeTokens(b, 1, ENT, ID);
+    Marker m = enter_section_(b, l, _NONE_, ENTITY, "<entity>");
+    r = consumeToken(b, "entity");
     p = r; // pin = 1
-    r = r && report_error_(b, Entity_2(b, l + 1));
+    r = r && report_error_(b, ValidID(b, l + 1));
+    r = p && report_error_(b, Entity_2(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, "{")) && r;
     r = p && report_error_(b, Entity_4(b, l + 1)) && r;
     r = p && consumeToken(b, "}") && r;
@@ -81,20 +78,20 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     return r || p;
   }
 
-  // (extends REFERENCE_TO_ENTITY  )?
+  // ('extends' JvmTypeReference  )?
   private static boolean Entity_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Entity_2")) return false;
     Entity_2_0(b, l + 1);
     return true;
   }
 
-  // extends REFERENCE_TO_ENTITY
+  // 'extends' JvmTypeReference
   private static boolean Entity_2_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Entity_2_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, EXTENDS);
-    r = r && REFERENCE_TO_ENTITY(b, l + 1);
+    r = consumeToken(b, "extends");
+    r = r && JvmTypeReference(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -111,14 +108,13 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ID SEP REFERENCE_TO_DATATYPE
+  // Property
   public static boolean Feature(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "Feature")) return false;
-    if (!nextTokenIs(b, ID)) return false;
+    if (!nextTokenIs(b, STRING)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, ID, SEP);
-    r = r && REFERENCE_TO_DATATYPE(b, l + 1);
+    r = Property(b, l + 1);
     exit_section_(b, m, FEATURE, r);
     return r;
   }
@@ -160,16 +156,16 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // REFERENCE_TO_QualifiedName (
+  // REFERENCE_TO_JvmType_QualifiedName (
   // 		'<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>'
-  // 		('.' REFERENCE_TO_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
+  // 		('.' REFERENCE_TO_JvmType_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
   // 	)?
   public static boolean JvmParameterizedTypeReference(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "JvmParameterizedTypeReference")) return false;
-    if (!nextTokenIs(b, REFERENCE_TO_QUALIFIEDNAME)) return false;
+    if (!nextTokenIs(b, ID)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, REFERENCE_TO_QUALIFIEDNAME);
+    r = REFERENCE_TO_JvmType_QualifiedName(b, l + 1);
     r = r && JvmParameterizedTypeReference_1(b, l + 1);
     exit_section_(b, m, JVM_PARAMETERIZED_TYPE_REFERENCE, r);
     return r;
@@ -177,7 +173,7 @@ public class SimpleParser implements PsiParser, LightPsiParser {
 
   // (
   // 		'<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>'
-  // 		('.' REFERENCE_TO_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
+  // 		('.' REFERENCE_TO_JvmType_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
   // 	)?
   private static boolean JvmParameterizedTypeReference_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "JvmParameterizedTypeReference_1")) return false;
@@ -186,7 +182,7 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   // '<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>'
-  // 		('.' REFERENCE_TO_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
+  // 		('.' REFERENCE_TO_JvmType_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
   private static boolean JvmParameterizedTypeReference_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "JvmParameterizedTypeReference_1_0")) return false;
     boolean r;
@@ -222,7 +218,7 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ('.' REFERENCE_TO_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
+  // ('.' REFERENCE_TO_JvmType_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?)*
   private static boolean JvmParameterizedTypeReference_1_0_4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "JvmParameterizedTypeReference_1_0_4")) return false;
     while (true) {
@@ -233,13 +229,13 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // '.' REFERENCE_TO_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?
+  // '.' REFERENCE_TO_JvmType_ValidID ('<' JvmArgumentTypeReference (',' JvmArgumentTypeReference)* '>')?
   private static boolean JvmParameterizedTypeReference_1_0_4_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "JvmParameterizedTypeReference_1_0_4_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, ".");
-    r = r && consumeToken(b, REFERENCE_TO_VALIDID);
+    r = r && REFERENCE_TO_JvmType_ValidID(b, l + 1);
     r = r && JvmParameterizedTypeReference_1_0_4_0_2(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
@@ -510,7 +506,49 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ValidID ("." ValidID)*
+  // 'package' QualifiedName '{'
+  //         AbstractElement*
+  //     '}'
+  public static boolean PackageDeclaration(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PackageDeclaration")) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, PACKAGE_DECLARATION, "<package declaration>");
+    r = consumeToken(b, "package");
+    r = r && QualifiedName(b, l + 1);
+    r = r && consumeToken(b, "{");
+    r = r && PackageDeclaration_3(b, l + 1);
+    r = r && consumeToken(b, "}");
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // AbstractElement*
+  private static boolean PackageDeclaration_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "PackageDeclaration_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!AbstractElement(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "PackageDeclaration_3", c)) break;
+    }
+    return true;
+  }
+
+  /* ********************************************************** */
+  // STRING ':' JvmTypeReference
+  public static boolean Property(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "Property")) return false;
+    if (!nextTokenIs(b, STRING)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, STRING);
+    r = r && consumeToken(b, ":");
+    r = r && JvmTypeReference(b, l + 1);
+    exit_section_(b, m, PROPERTY, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // ValidID ("."ValidID)*
   public static boolean QualifiedName(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "QualifiedName")) return false;
     if (!nextTokenIs(b, ID)) return false;
@@ -522,7 +560,7 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // ("." ValidID)*
+  // ("."ValidID)*
   private static boolean QualifiedName_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "QualifiedName_1")) return false;
     while (true) {
@@ -533,7 +571,7 @@ public class SimpleParser implements PsiParser, LightPsiParser {
     return true;
   }
 
-  // "." ValidID
+  // "."ValidID
   private static boolean QualifiedName_1_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "QualifiedName_1_0")) return false;
     boolean r;
@@ -586,37 +624,50 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // ID
-  public static boolean REFERENCE_TO_DATATYPE(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "REFERENCE_TO_DATATYPE")) return false;
+  // QualifiedName
+  public static boolean REFERENCE_TO_JvmDeclaredType_QualifiedName(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "REFERENCE_TO_JvmDeclaredType_QualifiedName")) return false;
     if (!nextTokenIs(b, ID)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, ID);
-    exit_section_(b, m, REFERENCE_TO_DATATYPE, r);
+    r = QualifiedName(b, l + 1);
+    exit_section_(b, m, REFERENCE_TO_JVM_DECLARED_TYPE_QUALIFIED_NAME, r);
     return r;
   }
 
   /* ********************************************************** */
-  // ID
-  public static boolean REFERENCE_TO_ENTITY(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "REFERENCE_TO_ENTITY")) return false;
+  // QualifiedNameInStaticImport
+  public static boolean REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport")) return false;
     if (!nextTokenIs(b, ID)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, ID);
-    exit_section_(b, m, REFERENCE_TO_ENTITY, r);
+    r = QualifiedNameInStaticImport(b, l + 1);
+    exit_section_(b, m, REFERENCE_TO_JVM_DECLARED_TYPE_QUALIFIED_NAME_IN_STATIC_IMPORT, r);
     return r;
   }
 
   /* ********************************************************** */
-  // DataType | Entity | COMMENT
-  static boolean Type(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "Type")) return false;
+  // QualifiedName
+  public static boolean REFERENCE_TO_JvmType_QualifiedName(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "REFERENCE_TO_JvmType_QualifiedName")) return false;
+    if (!nextTokenIs(b, ID)) return false;
     boolean r;
-    r = DataType(b, l + 1);
-    if (!r) r = Entity(b, l + 1);
-    if (!r) r = consumeToken(b, COMMENT);
+    Marker m = enter_section_(b);
+    r = QualifiedName(b, l + 1);
+    exit_section_(b, m, REFERENCE_TO_JVM_TYPE_QUALIFIED_NAME, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // ValidID
+  public static boolean REFERENCE_TO_JvmType_ValidID(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "REFERENCE_TO_JvmType_ValidID")) return false;
+    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = ValidID(b, l + 1);
+    exit_section_(b, m, REFERENCE_TO_JVM_TYPE_VALID_ID, r);
     return r;
   }
 
@@ -705,54 +756,59 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // "import" ("static" ("extension")? REFERENCE_TO_QualifiedNameInStaticImport ("*" | ValidID))
-  //                      | REFERENCE_TO_QualifiedName
-  //                      | QualifiedNameWithWildcard
+  // "import" (
+  //                     ("static" ("extension")? REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport ("*" | ValidID))
+  //                      | REFERENCE_TO_JvmDeclaredType_QualifiedName
+  //                      | QualifiedNameWithWildcard) ';'?
   public static boolean XImportDeclaration(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "XImportDeclaration")) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, X_IMPORT_DECLARATION, "<x import declaration>");
-    r = XImportDeclaration_0(b, l + 1);
-    if (!r) r = consumeToken(b, REFERENCE_TO_QUALIFIEDNAME);
-    if (!r) r = QualifiedNameWithWildcard(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    r = consumeToken(b, "import");
+    p = r; // pin = 1
+    r = r && report_error_(b, XImportDeclaration_1(b, l + 1));
+    r = p && XImportDeclaration_2(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
-  // "import" ("static" ("extension")? REFERENCE_TO_QualifiedNameInStaticImport ("*" | ValidID))
-  private static boolean XImportDeclaration_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "XImportDeclaration_0")) return false;
+  // ("static" ("extension")? REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport ("*" | ValidID))
+  //                      | REFERENCE_TO_JvmDeclaredType_QualifiedName
+  //                      | QualifiedNameWithWildcard
+  private static boolean XImportDeclaration_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "XImportDeclaration_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, "import");
-    r = r && XImportDeclaration_0_1(b, l + 1);
+    r = XImportDeclaration_1_0(b, l + 1);
+    if (!r) r = REFERENCE_TO_JvmDeclaredType_QualifiedName(b, l + 1);
+    if (!r) r = QualifiedNameWithWildcard(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // "static" ("extension")? REFERENCE_TO_QualifiedNameInStaticImport ("*" | ValidID)
-  private static boolean XImportDeclaration_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "XImportDeclaration_0_1")) return false;
+  // "static" ("extension")? REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport ("*" | ValidID)
+  private static boolean XImportDeclaration_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "XImportDeclaration_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, "static");
-    r = r && XImportDeclaration_0_1_1(b, l + 1);
-    r = r && consumeToken(b, REFERENCE_TO_QUALIFIEDNAMEINSTATICIMPORT);
-    r = r && XImportDeclaration_0_1_3(b, l + 1);
+    r = r && XImportDeclaration_1_0_1(b, l + 1);
+    r = r && REFERENCE_TO_JvmDeclaredType_QualifiedNameInStaticImport(b, l + 1);
+    r = r && XImportDeclaration_1_0_3(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   // ("extension")?
-  private static boolean XImportDeclaration_0_1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "XImportDeclaration_0_1_1")) return false;
-    XImportDeclaration_0_1_1_0(b, l + 1);
+  private static boolean XImportDeclaration_1_0_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "XImportDeclaration_1_0_1")) return false;
+    XImportDeclaration_1_0_1_0(b, l + 1);
     return true;
   }
 
   // ("extension")
-  private static boolean XImportDeclaration_0_1_1_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "XImportDeclaration_0_1_1_0")) return false;
+  private static boolean XImportDeclaration_1_0_1_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "XImportDeclaration_1_0_1_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, "extension");
@@ -761,14 +817,21 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   // "*" | ValidID
-  private static boolean XImportDeclaration_0_1_3(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "XImportDeclaration_0_1_3")) return false;
+  private static boolean XImportDeclaration_1_0_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "XImportDeclaration_1_0_3")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, "*");
     if (!r) r = ValidID(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // ';'?
+  private static boolean XImportDeclaration_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "XImportDeclaration_2")) return false;
+    consumeToken(b, ";");
+    return true;
   }
 
   /* ********************************************************** */
@@ -788,13 +851,31 @@ public class SimpleParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // Type*
+  // XImportSection? AbstractElement*
   static boolean simpleFile(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "simpleFile")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = simpleFile_0(b, l + 1);
+    r = r && simpleFile_1(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // XImportSection?
+  private static boolean simpleFile_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "simpleFile_0")) return false;
+    XImportSection(b, l + 1);
+    return true;
+  }
+
+  // AbstractElement*
+  private static boolean simpleFile_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "simpleFile_1")) return false;
     while (true) {
       int c = current_position_(b);
-      if (!Type(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "simpleFile", c)) break;
+      if (!AbstractElement(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "simpleFile_1", c)) break;
     }
     return true;
   }

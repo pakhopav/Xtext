@@ -11,6 +11,9 @@ public interface SimpleJvmParameterizedTypeReference extends PsiElement {
   List<SimpleJvmArgumentTypeReference> getJvmArgumentTypeReferenceList();
 
   @NotNull
-  PsiElement getREFERENCETOQualifiedName();
+  SimpleREFERENCETOJvmTypeQualifiedName getREFERENCETOJvmTypeQualifiedName();
+
+  @NotNull
+  List<SimpleREFERENCETOJvmTypeValidID> getREFERENCETOJvmTypeValidIDList();
 
 }
