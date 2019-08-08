@@ -39,7 +39,7 @@ public class SimpleSyntaxHighlighter extends SyntaxHighlighterBase {
     @NotNull
     @Override
     public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-        if (tokenType.equals(SimpleTypes.KEYWORD_ENTITY) ||tokenType.equals(SimpleTypes.KEYWORD_PAKAGE )||tokenType.equals(SimpleTypes.KEYWORD_EXTENDS )  ) {
+        if (tokenType.equals(SimpleTypes.KEYWORD_ENTITY) ||tokenType.equals(SimpleTypes.KEYWORD_PACKAGE )||tokenType.equals(SimpleTypes.KEYWORD_EXTENDS ) ||tokenType.equals(SimpleTypes.KEYWORD_PROPERTY )  ) {
             return  KEY_KEYS;
         }else if (tokenType.equals(SimpleTypes.STRING)){
             return VALUE_KEYS;

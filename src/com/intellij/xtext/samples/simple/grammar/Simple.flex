@@ -32,9 +32,9 @@ END_OF_LINE_COMMENT=("#"|"!")[^\r\n]*
 %%
 <YYINITIAL> {
 
-
+"property" {return KEYWORD_PROPERTY;}
 "entity" {return KEYWORD_ENTITY;}
-"pakage" {return KEYWORD_PAKAGE;}
+"pakage" {return KEYWORD_PACKAGE;}
 "extends" {return KEYWORD_EXTENDS;}
 {ID} {return ID; }
 {STRING} {return STRING;}

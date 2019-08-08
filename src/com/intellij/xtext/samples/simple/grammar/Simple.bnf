@@ -18,8 +18,8 @@
         DOT = 'regexp:\.'
         COMMA = 'regexp:,'
 
-
-        keyword_pakage = 'regexp:pakage'
+        keyword_property = 'regexp:property'
+        keyword_package = 'regexp:package'
         keyword_entity = 'regexp:entity'
         keyword_extends = 'regexp:extends'
 
@@ -76,19 +76,18 @@ Entity ::='entity'  ValidID  ('extends' JvmTypeReference  )? "{"
     methods=[superType="JvmTypeReference" features="Feature"  getName setName getNameIdentifier ]
 }
 
- Feature ::= Property
+private Feature ::= Property
 
 
 Property::=
-    STRING ':' JvmTypeReference
+    "property" STRING ':' JvmTypeReference
 {
+    recoverWhile=Property_recover
+    methods=[Xname="STRING"  type="JvmTypeReference"]
 
-
-    methods=[Xname="STRING"
-            type="JvmTypeReference"]
 }
 
-
+private Property_recover::= !(keyword_property| "}")
 
 //                             REFERENCE SECTION
 
